@@ -10,7 +10,7 @@ const App = () => {
 
   useEffect(() => {
     // Fetch available startup areas from the backend
-    fetch('http://localhost:3001/startupFields')
+    fetch('http://localhost:8000/startupFields')
       .then(response => response.json())
       .then(data => setStartupAreas(data.startupFields))
       .catch(error => console.error('Error fetching startup areas:', error));
@@ -18,7 +18,7 @@ const App = () => {
 
   const handleGenerateIdeas = async () => {
     // Fetch startup ideas based on the chosen area from the backend
-    fetch('http://localhost:3001/chooseStartupField', {
+    fetch('http://localhost:8000/chooseStartupField', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ const App = () => {
 
   const handleGetStartupDetails = async (link) => {
     // Fetch details of the selected startup link from the backend
-    fetch(`http://localhost:3001/api/getStartupDetails/${link}`)
+    fetch(`http://localhost:8000/api/getStartupDetails/${link}`)
       .then(response => response.json())
       .then(data => setSelectedStartupDetails(data.startupDetails))
       .catch(error => console.error('Error fetching startup details:', error));
