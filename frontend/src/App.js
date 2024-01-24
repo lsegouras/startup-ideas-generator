@@ -1,79 +1,94 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import * as S from './styles';
+import { GlobalStyle, Sidebar, Main, Loading } from './styles';
 
 const App = () => {
-  const [startupAreas, setStartupAreas] = useState([]);
-  const [startupLinks, setStartupLinks] = useState([]);
-  const [selectedStartupDetails, setSelectedStartupDetails] = useState(null);
-  const [selectedArea, setSelectedArea] = useState('');
+  const [fields, setFields] = useState([]);
+  const [selectedField, setSelectedField] = useState('');
+  const [startupIdeas, setStartupIdeas] = useState([]);
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch available startup areas from the backend
+    // Fetch available fields from the backend
     fetch('http://localhost:8000/startupFields')
       .then(response => response.json())
-      .then(data => setStartupAreas(data.startupFields))
-      .catch(error => console.error('Error fetching startup areas:', error));
+      .then(data => setFields(data.startupFields))
+      .catch(error => console.error('Error fetching startup fields:', error));
+
+    // Reset startupIdeas, selectedField, and message on component mount
+    setStartupIdeas([]);
+    setSelectedField('');
+    setMessage(null);
   }, []);
 
-  const handleGenerateIdeas = async () => {
-    // Fetch startup ideas based on the chosen area from the backend
-    fetch('http://localhost:8000/chooseStartupField', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ area: selectedArea }),
-    })
-      .then(response => response.json())
-      .then(data => setStartupLinks(data.startupOptions))
-      .catch(error => console.error('Error fetching startup ideas:', error));
+  const handleGenerateStartup = async () => {
+    if (selectedField) {
+      setLoading(true);
+
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          message: `Make a list of twenty innovative and disruptive ideas of startup on the ${selectedField} field`,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      try {
+        const response = await fetch('http://localhost:8000/startupIdeas', options);
+        const data = await response.json();
+        setStartupIdeas(data.choices.map(choice => choice.message.content));
+        setMessage(data.choices[0].message);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
-  const handleGetStartupDetails = async (link) => {
-    // Fetch details of the selected startup link from the backend
-    fetch(`http://localhost:8000/api/getStartupDetails/${link}`)
-      .then(response => response.json())
-      .then(data => setSelectedStartupDetails(data.startupDetails))
-      .catch(error => console.error('Error fetching startup details:', error));
+  const handleGenerateNewIdeas = () => {
+    setStartupIdeas([]);
+    setSelectedField('');
+    setMessage(null);
   };
 
   return (
-    <S.Container>
-      <S.Sidebar>
-        <S.StyledSelect onChange={(e) => setSelectedArea(e.target.value)}>
-          <option value="" disabled selected>Select an area</option>
-          {startupAreas.map((area, index) => (
-            <option key={index} value={area}>{area}</option>
-          ))}
-        </S.StyledSelect>
+    <>
+      <GlobalStyle />
+      <div className="container">
+        {/* Sidebar */}
+        <Sidebar>
+          <h1>StartupWizard</h1>
+          <select onChange={(e) => setSelectedField(e.target.value)}>
+            <option value="">Select a Field</option>
+            {fields.map(field => (
+              <option key={field} value={field}>
+                {field}
+              </option>
+            ))}
+          </select>
+          <button onClick={handleGenerateStartup}>Generate Startup</button>
+        </Sidebar>
 
-        <S.StyledButton onClick={handleGenerateIdeas}>Generate Startup Ideas</S.StyledButton>
-
-        <S.StyledLinks>
-          {startupLinks.map((link, index) => (
-            <a key={index} href="#" onClick={() => handleGetStartupDetails(link)}>{link}</a>
-          ))}
-        </S.StyledLinks>
-      </S.Sidebar>
-
-      <S.Main>
-        {selectedStartupDetails && (
-          <S.StartupDetailsContainer>
-            <S.StartupDetailsTitle>{selectedStartupDetails.name}</S.StartupDetailsTitle>
-            <S.StartupDetailsText>{selectedStartupDetails.description}</S.StartupDetailsText>
-            <S.StartupDetailsTitle>Steps:</S.StartupDetailsTitle>
-            <ul>
-              {selectedStartupDetails.steps.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ul>
-            <S.StartupDetailsTitle>Additional Details:</S.StartupDetailsTitle>
-            <S.StartupDetailsText>{selectedStartupDetails.additionalDetails}</S.StartupDetailsText>
-          </S.StartupDetailsContainer>
-        )}
-      </S.Main>
-    </S.Container>
+        {/* Main */}
+        <Main>
+          {loading && <Loading>Loading...</Loading>}
+          {startupIdeas.length > 0 && (
+            <>
+              <ol>
+                {startupIdeas.map((idea, index) => (
+                  <li key={index}>{idea}</li>
+                ))}
+              </ol>
+              <button onClick={handleGenerateNewIdeas}>Generate New Startup Ideas</button>
+            </>
+          )}
+        </Main>
+      </div>
+    </>
   );
 };
 
