@@ -54,7 +54,7 @@ The frontend is built with React.js and Styled Components, providing a user-frie
 
 ## Getting Started
 
-1. Clone the repository `https://github.com/lsegouras/startup-ideas-generator`.
+1. Clone the repository `(https://github.com/lsegouras/startup-ideas-generator)`.
 2. Install backend dependencies using `npm install` in the `backend` directory:
    - `express`, `cors`, `dotenv`, `node-fetch`.
 3. Install frontend dependencies using `npm install` in the `frontend` directory:
