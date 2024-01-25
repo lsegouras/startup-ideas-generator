@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# StartupWizard App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+Welcome to StartupWizard, an innovative application that leverages artificial intelligence to generate groundbreaking startup ideas. This documentation provides a comprehensive guide to understanding and using the application. The project is built with Node.js (Express) for the backend and React.js with Styled Components for the frontend.
 
-In the project directory, you can run:
+## Backend
 
-### `npm start`
+### `server.js`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The backend server is the core of the application, responsible for handling requests and interacting with the OpenAI API to generate startup ideas.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### Routes:
 
-### `npm test`
+1. **Get Available Startup Fields:**
+   - Endpoint: `/startupFields`
+   - Method: `GET`
+   - Returns a list of available startup fields.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Generate Startup Ideas:**
+   - Endpoint: `/startupIdeas`
+   - Method: `POST`
+   - Expects a field selection from the frontend, then utilizes the OpenAI API to generate startup ideas based on the chosen field.
 
-### `npm run build`
+### Configuration:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Uses Express for server setup.
+- Implements CORS for cross-origin resource sharing.
+- Utilizes the OpenAI API for generating startup ideas.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Frontend
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `App.js`
 
-### `npm run eject`
+The frontend is built with React.js and Styled Components, providing a user-friendly interface to interact with the application.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### Components:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Sidebar:**
+  - Displays the application title, a dropdown to select a startup field, and a button to generate startup ideas.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Main:**
+  - Renders the generated startup ideas, a loading indicator, and a button to generate new startup ideas.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Functionality:
 
-## Learn More
+- Fetches available startup fields from the backend on component mount.
+- Allows users to select a startup field and generate corresponding ideas.
+- Displays generated ideas with the ability to refresh and generate new ideas.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Styling:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Styled with Styled Components for a clean and responsive UI.
 
-### Code Splitting
+## Getting Started
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Clone the repository.
+2. Install backend dependencies using `npm install` in the `backend` directory:
+   - `express`, `cors`, `dotenv`, `node-fetch`.
+3. Install frontend dependencies using `npm install` in the `frontend` directory:
+   - `react`, `react-dom`, `react-scripts`, `styled-components`, `axios`.
+4. Set up the backend:
+   - Create a `.env` file in the `backend` directory and add your OpenAI API key.
+   - Run the server using `npm start` in the `backend` directory, on port `8000`.
+5. Set up the frontend:
+   - Run the app using `npm start` in the `frontend` directory.
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Now you're ready to explore the exciting world of StartupWizard and generate innovative startup ideas!
